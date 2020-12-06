@@ -8,6 +8,7 @@ function BinarySearchTree() {
     }
     let root = null;
 
+//nO^log N
     this.insert = function(key) {
         let newNode = new Node(key);
         if (root === null) { 
@@ -20,7 +21,7 @@ function BinarySearchTree() {
     this.inOrderTraverse = function(cb) {
         inOrderTraverse(root, cb)
     }
-    // 先序遍历
+    // 先序遍历--复制一个二叉树 o^n
     this.perOrderTraverse = function(cb) {
         preOrderTraverseNode(root, cb)
     }
@@ -77,3 +78,6 @@ tree.insert(20)
 console.log(tree.key)
 
 // 树的遍历
+tree.inOrderTraverse((key) => {
+  console.log(key)
+})

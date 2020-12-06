@@ -29,7 +29,7 @@ function deepClone(obj = {}) {
 
     for (const key in obj) {
         // 保证key不是原型的属性
-        if (object.hasOwnProperty(key)) {
+        if (Object.hasOwnProperty(key)) {
             // 递归调用
             result[key] = deepClone(obj[key])
         }

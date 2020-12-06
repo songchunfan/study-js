@@ -116,3 +116,89 @@
     }
 
 })(window, window['lib'] || (window['lib'] = {}));
+
+function changeNum(num) {
+    if (typeof num !== 'number') {
+        throw new Error('请传入数字');
+        return false;
+    }
+
+    // 切割小数点
+    num = num + '';
+
+    let index = 0, i = 0;
+
+    for (; i < num.length; i++) {
+        if (num[i] === '.') {
+            index = i;
+        }
+    }
+
+    // 开始 100.2
+    let start = num.slice(0, index);
+    // 结束
+    let end = num.slice(index, -1);
+
+    let reson = [];
+
+    //  console.log(start.length)
+
+    let firstStart = '', j = start.length;
+    // 判断是否为三位数的倍数
+
+    // 第一位
+    let newStart = start.slice(0, j % 3);
+    console.log(newStart, start)
+    start = start.replace(newStart, '');
+    // Math.floor(j % 3) === j % 3 ?
+    for (; j >= 0; j--) {
+        // console.log(j)
+        // 遍历出符合的项
+        if (j % 3 === 0 && j !== start.length) {
+            console.log(j, '123')
+            reson.push(j)
+        }
+    }
+
+    // 存储被切割的字符串
+    let sliceStr = [];
+    // 反转数组
+    reson = reson.reverse();
+    // 遍历符合项切割数组
+    for (let k = 0; k < reson.length; k++) {
+        console.log(reson[k], reson[k + 1])
+        sliceStr.push(start.slice(reson[k], reson[k + 1]))
+    }
+    // 返回新的数组
+    let newNum = '';
+
+    if (newStart) {
+        newNum = newStart + ',' + sliceStr.join(',') + end;
+    } else {
+        newNum = sliceStr.join(',') + end;
+    }
+
+    return newNum
+
+}
+let str  = changeNum(10000.23);
+
+// 方法二
+/*
+   slice() 方法可从已有的数组中返回选定的元素,截取数组的一个方法
+*/
+function toThousandsNum(num) {
+    var num = (num || 0).toString(),
+        result = '';
+
+    while (num.length > 3) {
+        //此处用数组的slice方法，如果是负数，那么它规定从数组尾部开始算起的位置
+        result = ',' + num.slice(-3) + result;
+        num = num.slice(0, num.length - 3);
+    }
+    // 如果数字的开头为0,不需要逗号
+    if (num){
+    result = num + result
+    }
+    return result;
+}

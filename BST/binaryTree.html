@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<h1>排序二叉树 </h1>
+	<div>
+		<p>the <abbr title="World Wide Web Consortium">W3C</abbr> defines the <abbr title="Document Object Model">DOM</abbr> as:</p>
+		<dl>
+			<dt>w3c</dt>
+			<dd>world</dd>
+			<dt>w3c</dt>
+			<dd>world</dd>
+		</dl>
+		<div id="abbre"></div>
+	</div>
+	<script>
+		function displayAbbreviations() {
+			var abbreviations = document.getElementsByTagName('abbr');
+			var defs = [];
+			var dlist = document.createElement('dl');
+			if (abbreviations.length<1) {
+				return false;
+			}
+			for (var i = 0; i <abbreviations.length; i++) {
+				var current_abbr = abbreviations[i];
+				var definition = current_abbr.getAttribute('title');
+				var key = current_abbr.lastChild.nodeValue;
+				defs[key] = definition;
+			}
+			console.log(defs)
+			for (key in defs) {
+				var definition = defs[key];
+				var dtitle = document.createElement('dt');
+				var dtitle_text = document.createTextNode(key);
+				var ddesc = document.createElement('dd');
+				var ddesc_text = document.createTextNode(definition);
+				dtitle.appendChild(dtitle_text);
+				ddesc.appendChild(ddesc_text);
+				dlist.appendChild(dtitle);
+				dlist.appendChild(ddesc);
+			}
+			document.getElementById('abbre').appendChild(dlist);
+
+		}
+
+	</script>
+	<script>
+		
+		function BinaryTree() {
+			function Node (key) {
+				this.key = key;
+				this.left = null;
+				this.right = null;
+			}
+
+			var root = null;
+
+			var insertNode = function(node, newNode) {
+				if (newNode.key < node.key) {
+					if (node.left === null) {
+						node.left = newNode;
+					} else {
+						insertNode(node.left, newNode)
+					}
+					
+				} else {
+					if (node.right === null) {
+						node.right = newNode;
+					} else {
+						insertNode(node.right, newNode)
+					}
+					
+				}
+			}
+
+			this.insert = function(key) {
+
+			  var newNode = new Node(key);
+			  if (!root) {
+			  	root = newNode;
+			  } else {
+			  	insertNode(root, newNode)
+			  }
+			}
+
+			function inOrderTraverseNode (node, callback) {
+				if (node !== null) {
+					inOrderTraverseNode(node.left, callback);
+					callback(node.key)
+					inOrderTraverseNode(node.right, callback);
+				}
+			}
+			function perOrderTraverseNode (node, callback) {
+				if (node !== null) {
+					callback(node.key)
+					perOrderTraverseNode(node.left, callback)
+					perOrderTraverseNode(node.right, callback)
+				}
+			}
+			function postOrderTraverse (node, callback) {
+				if (node !== null) {
+					
+					postOrderTraverse(node.left, callback)
+					postOrderTraverse(node.right, callback)
+					callback(node.key)
+				}
+			}
+			// 中序遍历
+			this.inOrderTraverse = function (callback) {
+				inOrderTraverseNode(root, callback)
+			}
+			this.perOrderTraverse = function (callback) {
+				perOrderTraverseNode(root, callback)
+			}
+			this.postOrderTraverse = function (callback) {
+				postOrderTraverse(root, callback)
+			}
+
+			function minNode(node) {
+				if (node) {
+					while (node && node.left !== null) {
+						node = node.left;
+					}
+
+					return node.key;
+				}
+				return null;
+			}
+			function maxNode(node) {
+				if (node) {
+					while (node && node.right !== null) {
+						node = node.right;
+					}
+
+					return node.key;
+				}
+				return null;
+			}
+
+			this.min = function() {
+				return minNode(root)
+			}
+			this.max = function() {
+				return maxNode(root)
+			}
+
+			var searchNode = function(node, key) {
+				if (node===null) {
+					return false;
+				}
+				if (key<node.key) {
+					return searchNode(node.left, key);
+				} else if (key>node.key) {
+					return searchNode(node.right, key);
+				} else {
+					return true;
+				}
+			}
+
+			this.search = function(key) {
+				return searchNode(root, key)
+			}
+			function findMinNode (node) {
+				if (node) {
+					while (node && node.left !== null) {
+						node = node.left;
+					}
+
+					return node;
+				}
+				return null;
+			}
+			function removeNode (node, key) {
+				if (node == null) {
+					return null;
+				}
+				if (key<node.key) {
+					node.left = removeNode(node.left, key)
+					return node;
+				} else if (key>node.key) {
+					node.right = removeNode(node.right, key)
+					return node;
+				} else {
+					if (node.left === null&&node.right === null) {
+						node = null;
+						return node;
+					}
+					if (node.left === null) {
+						node = node.right;
+						return node;
+					} else if (node.right === null) {
+						node = node.left;
+						return node;
+					}
+
+					var aux = findMinNode(node.right);
+					node.key = aux.key;
+					node.right = removeNode(node.right, aux.key);
+					return node;
+				}
+			}
+			this.remove = function(key) {
+				root = removeNode(root, key)
+			}
+
+			this.binaryNode = function() {
+				return root
+			}
+
+		}
+		var nodes = [8,3,1,6,4,7,10,14,13]
+		var binaryTree = new BinaryTree()
+		nodes.forEach(key => {
+			binaryTree.insert(key)
+		})
+		binaryTree.remove(3)
+		console.log(binaryTree.binaryNode())
+
+		// binaryTree.perOrderTraverse(function(key) {
+		// 	console.log(key)
+		// })
+		// console.log('max node: ',binaryTree.max())
+		// console.log(binaryTree.search(7))
+		// console.log(binaryTree.search(19))
+
+	</script>
+</body>
+</html>
